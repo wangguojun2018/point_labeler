@@ -10,6 +10,7 @@ find_package(Qt5Xml REQUIRED)
 find_package(Qt5Gui REQUIRED) 
 find_package(Qt5OpenGL REQUIRED)
 find_package(GLEW REQUIRED)
+find_package(PCL REQUIRED)
 find_package(Boost REQUIRED COMPONENTS filesystem system)
 
 find_package(catkin COMPONENTS 
@@ -25,7 +26,10 @@ if(catkin_FOUND)
   )
 endif()
 
-include_directories(${catkin_INCLUDE_DIRS} src/ ${QT5_INCLUDE_DIRS} ${GLEW_INCLUDE_DIRS} /usr/include/eigen3)
+include_directories(${catkin_INCLUDE_DIRS} src/ ${QT5_INCLUDE_DIRS}
+ ${GLEW_INCLUDE_DIRS} /usr/include/eigen3
+ ${PCL_INCLUDE_DIRS}
+ )
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON) # needs to be activated for qt generated files in build directory.
 set(CMAKE_AUTOMOC ON)
@@ -129,5 +133,6 @@ if(GTEST_FOUND)
   add_subdirectory(src/test)
 endif()
 
-target_link_libraries(labeler ${catkin_LIBRARIES} ${Boost_LIBRARIES} ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES} pthread Qt5::Xml Qt5::OpenGL Qt5::Widgets)
+target_link_libraries(labeler ${catkin_LIBRARIES} ${Boost_LIBRARIES} ${OPENGL_LIBRARIES}
+ ${GLEW_LIBRARIES} pthread Qt5::Xml Qt5::OpenGL Qt5::Widgets ${PCL_LIBRARIES})
 

@@ -7,7 +7,9 @@
 #include <iostream>
 #include <sstream>
 #include "rv/string_utils.h"
-
+#include <pcl/point_cloud.h>
+#include<pcl/point_types.h>
+#include<pcl/io/pcd_io.h>
 #include <boost/lexical_cast.hpp>
 
 void KittiReader::initialize(const QString& directory) {
@@ -335,19 +337,25 @@ void KittiReader::update(const std::vector<uint32_t>& indexes, std::vector<Label
 }
 
 void KittiReader::readPoints(const std::string& filename, Laserscan& scan) {
-  std::ifstream in(filename.c_str(), std::ios::binary);
-  if (!in.is_open()) return;
+  // std::ifstream in(filename.c_str(), std::ios::binary);
+  // if (!in.is_open()) return;
 
-  scan.clear();
+  // scan.clear();
 
-  in.seekg(0, std::ios::end);
-  uint32_t num_points = in.tellg() / (4 * sizeof(float));
-  in.seekg(0, std::ios::beg);
+  // in.seekg(0, std::ios::end);
+  // uint32_t num_points = in.tellg() / (4 * sizeof(float));
+  // in.seekg(0, std::ios::beg);
 
-  std::vector<float> values(4 * num_points);
-  in.read((char*)&values[0], 4 * num_points * sizeof(float));
+  // std::vector<float> values(4 * num_points);
+  // in.read((char*)&values[0], 4 * num_points * sizeof(float));
 
-  in.close();
+  // in.close();
+  pcl::PointCloud<pcl::PointXYZI>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZI>);
+
+  pcl::io::loadPCDFile(filename,*cloud);
+
+  uint32_t num_points=cloud->points.size();
+
   std::vector<Point3f>& points = scan.points;
   std::vector<float>& remissions = scan.remissions;
 
@@ -355,10 +363,10 @@ void KittiReader::readPoints(const std::string& filename, Laserscan& scan) {
   remissions.resize(num_points);
 
   for (uint32_t i = 0; i < num_points; ++i) {
-    points[i].x = values[4 * i];
-    points[i].y = values[4 * i + 1];
-    points[i].z = values[4 * i + 2];
-    remissions[i] = values[4 * i + 3];
+    points[i].x = cloud->points[i].x;
+    points[i].y = cloud->points[i].y;
+    points[i].z = cloud->points[i].z;
+    remissions[i] = cloud->points[i].intensity;
   }
 }
 
