@@ -20,6 +20,7 @@
 * boost >= 1.54
 * QT >= 5.2
 * OpenGL Core Profile >= 4.0
+* PCL
 * [glow](https://github.com/jbehley/glow) (catkin package)
  
 ## Build
@@ -32,6 +33,7 @@ sudo apt install git libeigen3-dev libboost-all-dev qtbase5-dev libglew-dev catk
 Additionally, make sure you have [catkin-tools](https://catkin-tools.readthedocs.io/en/latest/) and the [fetch](https://github.com/Photogrammetry-Robotics-Bonn/catkin_tools_fetch) verb installed:
 ```bash
 sudo apt install python-pip
+sudo apt install libpcl-dev
 sudo pip install catkin_tools catkin_tools_fetch empy
 ```
 
