@@ -13,6 +13,39 @@
  - Tools for labeling of individual points and polygons.
  - Filtering of labels makes it easy to label even complicated structures with ease.
 
+## Install Nvidia Driver
+
+The kernel headers and development packages for the currently running kernel can be installed with:
+```bash
+sudo apt-get install linux-headers-$(uname -r)
+```
+Ensure packages on the CUDA network repository have priority over the Canonical repository.
+```bash
+distribution=$(. /etc/os-release;echo $ID$VERSION_ID | sed -e 's/\.//g')
+wget https://developer.download.nvidia.com/compute/cuda/repos/$distribution/x86_64/cuda-$distribution.pin
+sudo mv cuda-$distribution.pin /etc/apt/preferences.d/cuda-repository-pin-600
+
+```
+Install the CUDA repository public GPG key. Note that on Ubuntu 16.04, replace https with http in the command below
+
+```bash
+sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/$distribution/x86_64/7fa2af80.pub
+```
+Setup the CUDA network repository.
+```bash
+echo "deb http://developer.download.nvidia.com/compute/cuda/repos/$distribution/x86_64 /" | sudo tee /etc/apt/sources.list.d/cuda.list
+
+```
+Update the APT repository cache and install the driver using the cuda-drivers meta-package. Use the --no-install-recommends option for a lean driver install without any dependencies on X packages. This is particularly useful for headless installations on cloud instances.
+
+```bash
+sudo apt-get update
+sudo apt-get -y install cuda-drivers
+```
+
+
+
+
 ## Dependencies
 
 * catkin
@@ -32,9 +65,9 @@ sudo apt install git libeigen3-dev libboost-all-dev qtbase5-dev libglew-dev catk
 
 Additionally, make sure you have [catkin-tools](https://catkin-tools.readthedocs.io/en/latest/) and the [fetch](https://github.com/Photogrammetry-Robotics-Bonn/catkin_tools_fetch) verb installed:
 ```bash
-sudo apt install python-pip
+sudo apt install python3-pip
 sudo apt install libpcl-dev
-sudo pip install catkin_tools catkin_tools_fetch empy
+sudo pip3 install catkin_tools catkin_tools_fetch empy
 ```
 
 If you do not have a catkin workspace already, create one:
