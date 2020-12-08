@@ -87,6 +87,7 @@ git clone https://github.com/jbehley/point_labeler.git
 ```
 Download the additional dependencies:
 ```bash
+cd ~/catkin_ws
 catkin deps fetch
 ```
 Then, build the project:
