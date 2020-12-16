@@ -42,13 +42,17 @@ void KittiReader::initialize(const QString& directory) {
   // find corresponding label files.
   if (!labels_dir.exists()) base_dir_.mkdir("labels");
 
-  for (uint32_t i = 0; i < velodyne_filenames_.size(); ++i) {
+  for (uint32_t i = 0; i < velodyne_filenames_.size(); ++i) 
+  {
     QString filename = QFileInfo(QString::fromStdString(velodyne_filenames_[i])).baseName() + ".label";
-    if (!labels_dir.exists(filename)) {
-      std::ifstream in(velodyne_filenames_[i].c_str());
-      in.seekg(0, std::ios::end);
-      uint32_t num_points = in.tellg() / (4 * sizeof(float));
-      in.close();
+    if (!labels_dir.exists(filename)) 
+    {
+      pcl::PointCloud<pcl::PointXYZI>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZI>);
+      pcl::io::loadPCDFile(velodyne_filenames_[i],*cloud);
+
+      std::cout<<"init label file "<<velodyne_filenames_[i]<<" successful！"<<std::endl;
+
+      uint32_t num_points=cloud->points.size();
 
       std::ofstream out(labels_dir.filePath(filename).toStdString().c_str());
 
@@ -237,7 +241,8 @@ void KittiReader::retrieve(const Eigen::Vector3f& position, std::vector<uint32_t
 }
 
 void KittiReader::retrieve(uint32_t i, uint32_t j, std::vector<uint32_t>& indexes, std::vector<PointcloudPtr>& points,
-                           std::vector<LabelsPtr>& labels, std::vector<std::string>& images) {
+                           std::vector<LabelsPtr>& labels, std::vector<std::string>& images) 
+  {
   indexes.clear();
   points.clear();
   labels.clear();
@@ -351,11 +356,12 @@ void KittiReader::readPoints(const std::string& filename, Laserscan& scan) {
 
   // in.close();
   pcl::PointCloud<pcl::PointXYZI>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZI>);
-
   pcl::io::loadPCDFile(filename,*cloud);
 
-  uint32_t num_points=cloud->points.size();
+  std::cout<<"load pcd file "<<filename<<" successful！"<<std::endl;
 
+  uint32_t num_points=cloud->points.size();
+  std::cout<<"num points is "<<num_points<<std::endl;
   std::vector<Point3f>& points = scan.points;
   std::vector<float>& remissions = scan.remissions;
 
